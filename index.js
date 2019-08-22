@@ -9,7 +9,6 @@ class Grammarly {
 
   async init() {
     this.initRequestResponse = await axios.get("https://grammarly.com/");
-    console.log(this.initRequestResponse.headers["set-cookie"]);
     this.webSocket = new WebSocket("wss://capi.grammarly.com/freews", {
       origin: "chrome-extension://kbfnbcaeplbcioakkpcpgfkobkghlhen",
       headers: {
@@ -39,7 +38,7 @@ class Grammarly {
     this.webSocket.on("error", (data) => console.log(data));
   }
 
-  async check(str) {
+  check(str) {
     this.webSocket.on("message", (data) => {
       const parsedData = JSON.parse(data);
       console.log(parsedData);
@@ -58,54 +57,4 @@ class Grammarly {
   }
 }
 
-
-(async function () {
-  try {
-    const g = new Grammarly();
-    await g.init();
-    g.check("helloworld");
-  } catch (error) {
-    console.log(error);
-  }
-})();
-
-
-
-// const initialMessage = JSON.stringify({
-//   action: "start",
-//   client: "extension_chrome",
-//   clientVersion: "14.908.2201",
-//   dialect: "american",
-//   docid: "18745a6c-13d1-40e5-a798-9f536b8badf7",
-//   extDomain: "keep.google.com",
-//   id: 0,
-//   protocolVersion: "1.0",
-//   token: null,
-//   type: "initial"
-// });
-
-// ws.on('open', () => {
-//   console.log("opened");
-//   ws.send(initialMessage);
-//   ws.send(JSON.stringify(
-//     {"ch":["+0:0:hey. We live in a society. Good morning american!:0"],"rev":0,"action":"submit_ot","id":0}
-//   ));
-// });
-
-// ws.on('close', () => {
-//   console.log('close');
-// });
-
-// ws.on('error', (error) => {
-//   console.log("error");
-//   console.log(error);
-// });
-
-// ws.on('message', (data) => {
-//   console.log("message");
-//   console.log(data);
-
-//   if (data === `{"action":"pong"}`) {
-//       console.log("got pong");
-//   }
-// });
+module.exports = Grammarly;
